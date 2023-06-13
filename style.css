@@ -1,0 +1,80 @@
+*{
+  /* background-color: #141111; */
+}
+.todo {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  /* display: flex; */
+  align-items: center;
+  text-align: center;
+  justify-content: space-between;
+  
+}
+
+
+.todo h2 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.todo p {
+  margin: 5px 0;
+}
+
+.todo .details {
+  /* display: flex; */
+  align-items: center;
+}
+
+.todo .details p {
+  margin-left: 10px;
+}
+
+
+#filterDropdown {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  margin-bottom: 20px;
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 4px;
+  background-color: #811212;
+  border: 1px solid #ccc;
+  z-index: 19999; /* Increase the z-index value */
+}
+
+#todos {
+  margin-bottom: 50px;
+}
+.dropdown{
+  margin-top: 10%;
+}
+#header{
+  text-align: center;
+  color: blue;
+}
+
+
+#addTodoForm{
+  text-align: center;
+  margin-bottom: 2%;
+  font-weight: bolder;
+}
+
+button{
+  border-radius: 1px;
+  color: rgb(237, 237, 245);
+  background-color: blue;
+  border-style: hidden;
+  padding: 5px 25px;
+}
+
+.todo.completed {
+  background-color: #c4ffc4;
+}
+
+.todo.incomplete {
+  background-color: #fff7b5;
+}
