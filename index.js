@@ -47,9 +47,9 @@ const displayTodos = () => {
     div.setAttribute('class', 'todo');
 
     if (item.completed) {
-      div.style.backgroundColor = 'green';
+      div.style.backgroundColor = 'purple';
     } else {
-      div.style.backgroundColor = 'yellow';
+      div.style.backgroundColor = 'green';
     }
 
     todoContainer.appendChild(div);
@@ -94,9 +94,9 @@ const filterTodos = () => {
     div.setAttribute('class', 'todo');
 
     if (item.completed) {
-      div.style.backgroundColor = 'green';
+      div.style.backgroundColor = 'purple';
     } else {
-      div.style.backgroundColor = 'yellow';
+      div.style.backgroundColor = 'green';
     }
 
     todoContainer.appendChild(div);
@@ -137,7 +137,7 @@ const updateTodo = (todoId, completed) => {
   if (updatedTodo) {
     updatedTodo.completed = completed;
 
-    fetch(`https://dummyjson.com/todos1`, {
+    fetch(`https://dummyjson.com/todos/1`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -234,3 +234,5 @@ addTodoForm.addEventListener('submit', event => {
 });
 
 getTodos().then(displayTodos);
+addTodo()
+

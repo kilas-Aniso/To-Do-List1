@@ -1,6 +1,11 @@
 *{
   /* background-color: #141111; */
 }
+body{
+  background-color: rgb(231, 224, 224);
+  color: #181616;
+
+}
 .todo {
   border: 1px solid #ccc;
   padding: 10px;
@@ -9,6 +14,9 @@
   align-items: center;
   text-align: center;
   justify-content: space-between;
+  width: 300px;
+  margin: auto;
+
   
 }
 
