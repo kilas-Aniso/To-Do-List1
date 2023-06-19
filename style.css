@@ -56,9 +56,24 @@ body{
 #todos {
   margin-bottom: 50px;
 }
-.dropdown{
+.dropdown {
   margin-top: 10%;
+  position: relative;
 }
+
+.dropdown .hover-options {
+  display: all;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #f9f9f9;
+  padding: 10px;
+}
+
+.dropdown:hover .hover-options {
+  display: block;
+}
+
 #header{
   text-align: center;
   color: blue;
@@ -86,3 +101,6 @@ button{
 .todo.incomplete {
   background-color: #fff7b5;
 }
+/* #userIdInput{
+  display: none;
+} */

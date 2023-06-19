@@ -1,18 +1,12 @@
 const todoContainer = document.getElementById('todos');
 const filterDropdown = document.getElementById('filterDropdown');
 const addTodoForm = document.getElementById('addTodoForm');
-const userIdInput = document.getElementById('userIdInput');
 const todoInput = document.getElementById('todoInput');
 let todos = [];
 
 const getTodos = () => {
-  return fetch('https://dummyjson.com/todos')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Error fetching todos');
-      }
-      return response.json();
-    })
+  return fetch('https://dummyjson.com/todos/user/5')
+    .then(response => response.json())
     .then(response => {
       todos = response.todos;
       return todos;
@@ -35,21 +29,20 @@ const displayTodos = () => {
     checkbox.checked = item.completed;
     deleteButton.textContent = 'Delete';
 
-    checkbox.addEventListener('change', event => handleCompletionChange(event, item.id));
+    checkbox.addEventListener('change', () => updateTodo(item.id, checkbox.checked));
     deleteButton.addEventListener('click', () => deleteTodo(item.id));
 
     div.appendChild(todo);
-   
-    div.appendChild(checkbox);
     div.appendChild(completed);
+    div.appendChild(checkbox);
     div.appendChild(deleteButton);
     div.setAttribute('key', item.id);
     div.setAttribute('class', 'todo');
 
     if (item.completed) {
-      div.style.backgroundColor = 'purple';
-    } else {
       div.style.backgroundColor = 'green';
+    } else {
+      div.style.backgroundColor = 'yellow';
     }
 
     todoContainer.appendChild(div);
@@ -82,50 +75,46 @@ const filterTodos = () => {
     checkbox.checked = item.completed;
     deleteButton.textContent = 'Delete';
 
-    checkbox.addEventListener('change', event => handleCompletionChange(event, item.id));
+    checkbox.addEventListener('change', () => updateTodo(item.id, checkbox.checked));
     deleteButton.addEventListener('click', () => deleteTodo(item.id));
 
     div.appendChild(todo);
-    
-    div.appendChild(checkbox);
     div.appendChild(completed);
+    div.appendChild(checkbox);
     div.appendChild(deleteButton);
     div.setAttribute('key', item.id);
     div.setAttribute('class', 'todo');
 
     if (item.completed) {
-      div.style.backgroundColor = 'purple';
-    } else {
       div.style.backgroundColor = 'green';
+    } else {
+      div.style.backgroundColor = 'yellow';
     }
 
     todoContainer.appendChild(div);
   });
 };
 
-const addTodo = (userId, todo) => {
-  const newTodo = {
-    userId,
-    todo,
-    completed: false
-  };
+const addTodo = () => {
+  const todo = todoInput.value;
 
   fetch('https://dummyjson.com/todos/add', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(newTodo)
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      todo,
+      completed: false,
+      userId: 5,
+    }),
   })
+    .then(response => response.json())
     .then(response => {
-      if (!response.ok) {
-        throw new Error('Error adding todo');
+      if (response.completed) {
+        updateTodo(response.id, true);
       }
-      return response.json();
-    })
-    .then(response => {
       todos.push(response);
       displayTodos();
+      todoInput.value = '';
     })
     .catch(error => {
       console.error('Error adding todo:', error);
@@ -145,15 +134,9 @@ const updateTodo = (todoId, completed) => {
       body: JSON.stringify(updatedTodo)
     })
       .then(response => {
-        if (!response.ok) {
-          throw new Error('Error updating todo');
-        }
-        return response.json();
-      })
-      .then(response => {
         const updatedIndex = todos.findIndex(item => item.id === todoId);
         if (updatedIndex !== -1) {
-          todos[updatedIndex] = response;
+          todos[updatedIndex] = updatedTodo; // Update the todo object in the array
         }
         displayTodos();
       })
@@ -163,17 +146,11 @@ const updateTodo = (todoId, completed) => {
   }
 };
 
-const deleteTodo = (todoId) => {
+const deleteTodo = todoId => {
   fetch(`https://dummyjson.com/todos/1`, {
-    method: 'DELETE'
+    method: 'DELETE',
   })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Error deleting todo');
-      }
-      return response.json();
-    })
-    .then(response => {
+    .then(() => {
       todos = todos.filter(item => item.id !== todoId);
       displayTodos();
     })
@@ -182,57 +159,13 @@ const deleteTodo = (todoId) => {
     });
 };
 
-const handleCompletionChange = (event, todoId) => {
-  const completed = event.target.checked;
-  const todoIndex = todos.findIndex(item => item.id === todoId);
-  if (todoIndex !== -1) {
-    todos[todoIndex].completed = completed;
-  }
-
-  fetch(`https://dummyjson.com/todos/1`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ completed })
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Error updating todo');
-      }
-      return response.json();
-    })
-    .then(response => {
-      const updatedIndex = todos.findIndex(item => item.id === todoId);
-      if (updatedIndex !== -1) {
-        todos[updatedIndex] = response;
-      }
-      displayTodos();
-    })
-    .catch(error => {
-      console.error('Error updating todo:', error);
-    });
-
-  const label = event.target.parentNode.querySelector('p');
-  label.textContent = `Completed: ${completed}`;
-};
-
 filterDropdown.addEventListener('change', filterTodos);
-
-addTodoForm.addEventListener('submit', event => {
-  event.preventDefault();
-
-  const userId = userIdInput.value;
-  const todo = todoInput.value;
-
-  if (userId && todo) {
-    addTodo(userId, todo);
-
-    userIdInput.value = '';
-    todoInput.value = '';
-  }
+addTodoForm.addEventListener('submit', x => {
+  x.preventDefault();
+  addTodo();
 });
 
-getTodos().then(displayTodos);
-addTodo()
-
+getTodos()
+  .then(() => {
+    displayTodos();
+  });
